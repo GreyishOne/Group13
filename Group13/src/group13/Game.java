@@ -10,6 +10,9 @@ public class Game {
     // Declare variables
     private Parser parser;
     private Room currentRoom;
+    Room river, darkroom, ladder, start, jungle;
+    
+    
     
     /**
      * No-arg constructor; Creates rooms and input parser.
@@ -24,32 +27,56 @@ public class Game {
      * and sets which room is the current.
      */
     private void createRooms() {
-        // Declare variables
-        Room outside, theatre, pub, lab, office;
-        
+        // Declare variables    
         // Instantiate rooms with description
-        lab = new Room("in a computing lab");
-        pub = new Room("in the campus pub");
-        office = new Room("in the computing admin office");
-        outside = new Room("outside the main entrance of the university");
-        theatre = new Room("in a lecture theatre");
+        start = new Room("You are confused, and everything looks strange. There is a ladder ahead, do you want to continue?\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X88888888                X\n" +
+"X888888         oo       X\n" +
+"X88888         /()\\  ->  X\n" +
+"X88888          /\\       X\n" +
+"XXXXXXXXXXXXXXXXXXXXXXXXXX");
+        ladder = new Room("You are at a ladder, you see a jungle ahead of you, do you want to continue?\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X                     -> X\n" +
+"X      oo      øøøøøøøøøøX\n" +
+"X <-  /()\\     [         X\n" +
+"X      /\\      [         X\n" +
+"XXXXXXXXXXXXXXXXXXXXXXXXXX");
+        jungle = new Room("You see a ladder behind you, and now find yourself in a jungle,\nyou see a river ahead, and a rope that you could use to swing yourself across the river,\ndo you want to continue or go back?\nXØØØØØØØØØØØØØØØØØØØØØØØØX\n" +
+"X<-            l         X\n" +
+"Xøøø    oo     l         X\n" +
+"X  ]   /()\\    l     ->  X\n" +
+"X  ]    /\\               X\n" +
+"XØØØØØØØØØØØØ________ØØØØX");
+        river = new Room("You see the rope behind you, that you can use to swing back across the river, and a dark tunnel ahead, do you want to continue?\nXØØØØØØØØØØØØØØØØØØØØØØØØX\n" +
+"X      l              888X\n" +
+"X      l        oo     88X\n" +
+"X      l   <-  /()\\  ->  X\n" +
+"X               /\\       X\n" +
+"XØØØ________ØØØØØØØØØØØØØX");
+        darkroom = new Room("You are now in a completely dark place, do you want to stay here?\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X888888888888888888888888X\n" +
+"X     oo   88888888888888X\n" +
+"X <- /()\\  88888888888888X\n" +
+"X     /\\   88888888888888X\n" +
+"X888888888888888888888888X");
         
         // Set exits to other rooms
-        lab.setExit("north", outside);
-        lab.setExit("east", office);
+        start.setExit("continue", ladder);
         
-        pub.setExit("east", outside);
+        ladder.setExit("climb", jungle);
+        ladder.setExit("backtrack", start);
         
-        office.setExit("west", lab);
+        jungle.setExit("rope", river);
+        jungle.setExit("backtrack", ladder);
         
-        outside.setExit("east", theatre);
-        outside.setExit("south", lab);
-        outside.setExit("west", pub);
+        
+        river.setExit("tunnel", darkroom);
+        river.setExit("rope", jungle);
 
-        theatre.setExit("west", outside);
+        darkroom.setExit("backtrack", river);
 
         // Set which room is current
-        currentRoom = outside;
+        currentRoom = start;
     }
 
     /**
@@ -80,9 +107,9 @@ public class Game {
         System.out.println();
         
         // Welcome message
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring " +
-                "adventure game.");
+        System.out.println("DONT PLAY THIS GAME!");
+        System.out.println("CONTINUE AT YOUR OWN RISK");
+        System.out.println("");
         
         // Help message
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
@@ -130,8 +157,7 @@ public class Game {
      */
     private void printHelp() {
         // Help message
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("You are lost. You are alone. You wander around");
         System.out.println();
         System.out.println("Your command words are:");
         

@@ -51,7 +51,7 @@ public class Room {
      * @return String, long description of the room.
      */
     public String getLongDescription() {
-        return "You are " + description + ".\n" + getExitString();
+        return "" + description + ".\n" + getExitString();
     }
 
     /**
@@ -61,7 +61,7 @@ public class Room {
      */
     private String getExitString() {
         // Start the String with title
-        String returnString = "Exits:";
+        String returnString = "Paths:";
         // add each exit to the String, separated by space
         Set<String> keys = exits.keySet();
         for(String exit : keys) {
