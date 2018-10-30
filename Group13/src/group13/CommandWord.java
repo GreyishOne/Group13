@@ -7,7 +7,13 @@ package group13;
  */
 public enum CommandWord {
     // Commands and their String plaintext
-    GO("go"), QUIT("quit"), HELP("help"), UNKNOWN("?");
+    GO("go"), 
+    QUIT("quit"), 
+    HELP("help"),
+    COLLECT("collect"),
+    GIVE("give"),
+    INVENTORY("inventory"),
+    UNKNOWN("?");
     
     // Declare variable
     private String commandString;

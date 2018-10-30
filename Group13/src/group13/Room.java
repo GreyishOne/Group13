@@ -13,6 +13,8 @@ import java.util.Iterator;
 public class Room {
     // Declare variables
     private String description;
+    private String leftDesc;
+    private String roomName;
     private HashMap<String, Room> exits;
 
     /**
@@ -25,6 +27,19 @@ public class Room {
         this.description = description;
         exits = new HashMap<String, Room>();
     }
+    
+    public Room(String description, String rightDesc) {
+        this.description = description;
+        this.leftDesc = rightDesc;
+        exits = new HashMap<String, Room>();
+    }
+    
+    public Room(String roomName, String description, String rightDesc) {
+        this.description = description;
+        this.leftDesc = rightDesc;
+        this.roomName = roomName;
+        exits = new HashMap<String, Room>();
+    }
 
     /**
      * Set an exit point from the room.
@@ -34,6 +49,10 @@ public class Room {
      */
     public void setExit(String direction, Room neighbor) {
         exits.put(direction, neighbor);
+    }
+    
+    public String getRoomName(){
+        return this.roomName;
     }
 
     /**
@@ -51,7 +70,11 @@ public class Room {
      * @return String, long description of the room.
      */
     public String getLongDescription() {
-        return "You are " + description + ".\n" + getExitString();
+        return description + ".\n" + getExitString();
+    }
+    
+    public String getLongDescriptionLeft() {
+        return leftDesc + ".\n" + getExitString();
     }
 
     /**
@@ -59,7 +82,7 @@ public class Room {
      * 
      * @return String, exits from the room.
      */
-    private String getExitString() {
+    public String getExitString() {
         // Start the String with title
         String returnString = "Exits:";
         // add each exit to the String, separated by space

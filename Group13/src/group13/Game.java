@@ -10,6 +10,9 @@ public class Game {
     // Declare variables
     private Parser parser;
     private Room currentRoom;
+    private String currentRoomName;
+    private int hasBanana = 0;
+    private int monkyHappy = 0;
     
     /**
      * No-arg constructor; Creates rooms and input parser.
@@ -25,31 +28,40 @@ public class Game {
      */
     private void createRooms() {
         // Declare variables
-        Room outside, theatre, pub, lab, office;
+        Room start, stairs, banana, monky, noMonky, flood;
         
         // Instantiate rooms with description
-        lab = new Room("in a computing lab");
-        pub = new Room("in the campus pub");
+        start = new Room("start", "Første rum", "Du har været her før?");
+        stairs = new Room("stairs", "Trapper!", "Trapper!");
+        banana = new Room("banana", "Hey en banan!", "Hey en banan!");
+        monky = new Room("monky", "Goddag abe", "Goddag abe!");
+        noMonky = new Room("noMonky", "INGEN abe", "INGEN abe!");
+        flood = new Room("flood", "Du hænger i over en flod!", "Du hænger i over en flod!");
+        /*
         office = new Room("in the computing admin office");
         outside = new Room("outside the main entrance of the university");
         theatre = new Room("in a lecture theatre");
-        
+        */
         // Set exits to other rooms
-        lab.setExit("north", outside);
-        lab.setExit("east", office);
+        start.setExit("right", stairs);
         
-        pub.setExit("east", outside);
+        stairs.setExit("left", banana);
+        stairs.setExit("right", banana);
         
-        office.setExit("west", lab);
+        banana.setExit("left", stairs);
+        banana.setExit("right", monky);
         
-        outside.setExit("east", theatre);
-        outside.setExit("south", lab);
-        outside.setExit("west", pub);
-
-        theatre.setExit("west", outside);
+        monky.setExit("left", banana);
+        monky.setExit("right", flood);
+        
+        noMonky.setExit("left", banana);
+        noMonky.setExit("right", flood);
+      
+        flood.setExit("left", monky);
 
         // Set which room is current
-        currentRoom = outside;
+        currentRoom = start;
+        //currentRoomName = "start";
     }
 
     /**
@@ -91,6 +103,7 @@ public class Game {
         // Current room message
         System.out.println(currentRoom.getLongDescription());
     }
+       
 
     /**
      * Processes the user command and perform the action.
@@ -101,7 +114,7 @@ public class Game {
     private boolean processCommand(Command command) {
         // Declare and assign quit variable to false
         boolean wantToQuit = false;
-
+        
         // Declare and assign first command word
         CommandWord commandWord = command.getCommandWord();
 
@@ -110,12 +123,47 @@ public class Game {
             System.out.println("I don't know what you mean...");
             return false;
         }
+        
+        if(commandWord == CommandWord.INVENTORY){
+            if(hasBanana == 1){
+                System.out.println("Du har 1 banan i din inventory");
+            }else{
+                System.out.println("Du har intet i din inventory");
+            }
+        }
+        
+        if(commandWord == CommandWord.COLLECT){
+            if(command.getSecondWord().equals("banana")){
+                this.hasBanana = 1;
+            }else{
+                System.out.println("Do you wonna collect something?");
+            }
+        }
+        
+        if(commandWord == CommandWord.GIVE){
+            if(command.getSecondWord().equals("banana") && currentRoom.getRoomName().equals("monky") && this.hasBanana == 1 && monkyHappy == 0){
+                this.monkyHappy = 1;
+                this.hasBanana = 0;
+            }else if(this.hasBanana == 0){
+                System.out.println("Du har jo ikke nogen banan?");
+            }else{
+                System.out.println("Der er jo ikke nogen at give en banan til??");
+            }
+        }
+        
+       
 
         // If help command, print help message
         if (commandWord == CommandWord.HELP) {
             printHelp();
         // If go command, then call go method with parsed command
         } else if (commandWord == CommandWord.GO) {
+            
+            if(currentRoom.getRoomName().equals("monky") && monkyHappy == 0 && command.getSecondWord().equals("right")){
+                System.out.println("The monky wont let you go threw? What do you do?");
+                return false;
+            }
+            
             goRoom(command);
         // If quit command, call quit method with parsed command
         } else if (commandWord == CommandWord.QUIT) {
@@ -150,20 +198,25 @@ public class Game {
             System.out.println("Go where?");
             return;
         }
-
+        
         // Assign second command word as direction
         String direction = command.getSecondWord();
-
         // Assign which room to go to
+        
         Room nextRoom = currentRoom.getExit(direction);
-
+       
+        
         // If no room, write error message
         if (nextRoom == null) {
             System.out.println("There is no door!");
         // Set next room to current and print room description
         } else {
             currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
+            if(direction.equals("right")){
+                System.out.println(currentRoom.getLongDescription());
+            }else if(direction.equals("left")){
+                System.out.println(currentRoom.getLongDescriptionLeft());
+            }
         }
     }
 
