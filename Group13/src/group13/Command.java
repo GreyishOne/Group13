@@ -10,6 +10,7 @@ public class Command {
     // Declare class variables
     private CommandWord commandWord;
     private String secondWord;
+    private String thirdWord;
 
     /**
      * Constructor; assigning available commands and 1st command word, and 2nd
@@ -18,9 +19,10 @@ public class Command {
      * @param commandWord CommandWord, containing available 1st command words.
      * @param secondWord String, second command word.
      */
-    public Command(CommandWord commandWord, String secondWord) {
+    public Command(CommandWord commandWord, String secondWord, String thirdWord) {
         this.commandWord = commandWord;
         this.secondWord = secondWord;
+        this.thirdWord = thirdWord;
     }
 
     /**
@@ -41,6 +43,16 @@ public class Command {
     public String getSecondWord() {
         return secondWord;
     }
+    
+    /**
+     * Return 3nd command word.
+     * 
+     * @return String, 2nd command word
+     */
+    public String getThirdWord() {
+        return thirdWord;
+    }
+    
 
     /**
      * Check for unknown command.
@@ -58,5 +70,14 @@ public class Command {
      */
     public boolean hasSecondWord() {
         return (secondWord != null);
+    }
+    
+    /**
+     * Check for 3nd command word.
+     * 
+     * @return boolean, false if no 2nd command word.
+     */
+    public boolean hasThirdWord() {
+        return (thirdWord != null);
     }
 }

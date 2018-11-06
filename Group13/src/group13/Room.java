@@ -1,6 +1,7 @@
 package group13;
 
 // Import section
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +17,12 @@ public class Room {
     private String leftDesc;
     private String roomName;
     private HashMap<String, Room> exits;
-
+    private ArrayList<Item> items = new ArrayList<Item>(); 
+    private ArrayList<Character> characters = new ArrayList<Character>();
+    public boolean goRight = true;
+    public boolean goLeft = true;
+   
+    
     /**
      * Constructor; assign description of room to variable and instantiate exit
      * HashMap.
@@ -48,6 +54,7 @@ public class Room {
      * @param neighbor Room, the room the exit leads to.
      */
     public void setExit(String direction, Room neighbor) {
+        //System.out.println("EXIT");
         exits.put(direction, neighbor);
     }
     
@@ -90,6 +97,10 @@ public class Room {
         for(String exit : keys) {
             returnString += " " + exit;
         }
+        returnString += "\n Items in room:\n";
+        returnString += getRoomItems() + "\n";
+        returnString += "\n Characters in the room:\n";
+        returnString += getRoomCharacters() + "\n";
         // Return String listing exits
         return returnString;
     }
@@ -100,7 +111,65 @@ public class Room {
      * @param direction String, direction of exit.
      * @return Room, room in that direction.
      */
+    
+    public Item getItem(int index){
+        return items.get(index);
+    }
+    
+    public Item getItem(String itemName){
+        Item toReturn = null;
+        for (int i = 0; i < items.size(); i++) {
+            if(items.get(i).getDescription().equals(itemName)){
+                return items.get(i);
+            }
+        }
+        return null;
+    }
+    
+    public void setItem(Item newitem){
+        items.add(newitem);
+    }
+    
+    public Character getCharacter(String characterName){
+        for (int i = 0; i < characters.size(); i++) {
+            if(characters.get(i).getName().equals(characterName)){
+                return characters.get(i);
+            }
+        }
+        return null;
+    }
+    
+    public void setCharacter(Character newCharacter){
+        characters.add(newCharacter);
+    }
+        
+    public String getRoomCharacters(){
+        String output = "";
+        for (int i = 0; i < characters.size(); i++) {
+            output += characters.get(i).getName() + ": " + characters.get(i).getDescription();
+        }
+        return output;
+    }
+    
+    public String getRoomItems(){
+        String output = "";
+        for (int i = 0; i < items.size(); i++) {
+            output += items.get(i).getDescription() + " ";
+        }
+        return output;
+    }
+    
+    public void removeItem(String itemName){
+        Item toReturn = null;
+        for (int i = 0; i < items.size(); i++) {
+            if(items.get(i).getDescription() == itemName){
+                items.remove(i);
+            }
+        }
+    }
+    
     public Room getExit(String direction) {
         return exits.get(direction);
     }
+    
 }

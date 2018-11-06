@@ -1,5 +1,7 @@
 package group13;
 
+import java.util.ArrayList;
+
 /**
  * Instantiation of Game class generate rooms and creates an input parser.
  * A method call runs the game.
@@ -13,6 +15,8 @@ public class Game {
     private String currentRoomName;
     private int hasBanana = 0;
     private int monkyHappy = 0;
+    ArrayList<Item> inventory = new ArrayList<Item>();
+    ArrayList<Character> character = new ArrayList<Character>();
     
     /**
      * No-arg constructor; Creates rooms and input parser.
@@ -53,12 +57,18 @@ public class Game {
         
         monky.setExit("left", banana);
         monky.setExit("right", flood);
+        monky.goRight = false;
         
         noMonky.setExit("left", banana);
         noMonky.setExit("right", flood);
       
         flood.setExit("left", monky);
-
+        
+        banana.setItem(new Item("Banana"));
+        banana.setItem(new Item("COmputer"));
+        
+        monky.setCharacter(new Character("Abe", "En vred abe der ikke har fået banan i langtid", "Banan"));
+        
         // Set which room is current
         currentRoom = start;
         //currentRoomName = "start";
@@ -125,45 +135,22 @@ public class Game {
         }
         
         if(commandWord == CommandWord.INVENTORY){
-            if(hasBanana == 1){
-                System.out.println("Du har 1 banan i din inventory");
-            }else{
-                System.out.println("Du har intet i din inventory");
-            }
+            getInventory();
         }
         
-        if(commandWord == CommandWord.COLLECT){
-            if(command.getSecondWord().equals("banana")){
-                this.hasBanana = 1;
-            }else{
-                System.out.println("Do you wonna collect something?");
-            }
+        if(commandWord == CommandWord.PICKUP){
+            getItem(command);
         }
         
         if(commandWord == CommandWord.GIVE){
-            if(command.getSecondWord().equals("banana") && currentRoom.getRoomName().equals("monky") && this.hasBanana == 1 && monkyHappy == 0){
-                this.monkyHappy = 1;
-                this.hasBanana = 0;
-            }else if(this.hasBanana == 0){
-                System.out.println("Du har jo ikke nogen banan?");
-            }else{
-                System.out.println("Der er jo ikke nogen at give en banan til??");
-            }
+            giveCharaterItem(command);
         }
         
-       
-
         // If help command, print help message
         if (commandWord == CommandWord.HELP) {
             printHelp();
         // If go command, then call go method with parsed command
         } else if (commandWord == CommandWord.GO) {
-            
-            if(currentRoom.getRoomName().equals("monky") && monkyHappy == 0 && command.getSecondWord().equals("right")){
-                System.out.println("The monky wont let you go threw? What do you do?");
-                return false;
-            }
-            
             goRoom(command);
         // If quit command, call quit method with parsed command
         } else if (commandWord == CommandWord.QUIT) {
@@ -204,13 +191,14 @@ public class Game {
         // Assign which room to go to
         
         Room nextRoom = currentRoom.getExit(direction);
-       
         
         // If no room, write error message
         if (nextRoom == null) {
             System.out.println("There is no door!");
         // Set next room to current and print room description
-        } else {
+        }else if(currentRoom.goLeft == false || currentRoom.goRight == false){
+            System.out.println("Something in the room is standing in the way for you to go");
+        }else {
             currentRoom = nextRoom;
             if(direction.equals("right")){
                 System.out.println(currentRoom.getLongDescription());
@@ -219,6 +207,7 @@ public class Game {
             }
         }
     }
+    
 
     /**
      * Confirm quit user request and return quit status.
@@ -234,6 +223,63 @@ public class Game {
         // Otherwise return true
         } else {
             return true;
+        }
+    }
+    
+    private void giveCharaterItem(Command command){
+        
+        if(!command.hasSecondWord()) {
+            System.out.println("Give to who?");
+            return;
+        }
+        
+        if(!command.hasThirdWord()) {
+            System.out.println("Give what?");
+            return;
+        }
+        
+        Character getCharacter = currentRoom.getCharacter("Abe");
+        
+        if(getCharacter == null){
+            System.out.print("This person is not here?");
+        }else{
+            if(getCharacter.wants){
+                System.out.print(getCharacter.getDescription());
+            }
+        }
+        
+    }
+
+    private void getInventory() {
+        String output = "";
+        for (int i = 0; i < inventory.size(); i++) {
+            output += inventory.get(i).getDescription() + " ";
+        }
+        System.out.println("Du har i din inventory: ");
+        System.out.println(output);
+    }
+
+    private void getItem(Command command) {
+        // If no second parsed user command, print error and return
+        if(!command.hasSecondWord()) {
+            System.out.println("Get what?");
+            return;
+        }
+        
+        // Assign second command word as direction
+        String item = command.getSecondWord();
+        // Assign which room to go to
+        
+        Item newItem = currentRoom.getItem(item);
+       
+        // If no room, write error message
+        if (newItem == null) {
+            System.out.println("That item is not here!");
+        // Set next room to current and print room description
+        } else {
+            inventory.add(newItem);
+            currentRoom.removeItem(item);
+            System.out.print("Picked up: " + item);
         }
     }
 }

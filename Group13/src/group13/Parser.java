@@ -32,6 +32,7 @@ public class Parser {
         String inputLine;
         String word1 = null;
         String word2 = null;
+        String word3 = null;
 
         // Symbols to signal waiting for user input
         System.out.print("> ");
@@ -47,11 +48,14 @@ public class Parser {
             // if second word, assign to variable
             if(tokenizer.hasNext()) {
                 word2 = tokenizer.next();
+                if(tokenizer.hasNext()) {
+                    word3 = tokenizer.next();
+                }
             }
         }
         
         // Return command object with parsed user commands
-        return new Command(commands.getCommandWord(word1), word2);
+        return new Command(commands.getCommandWord(word1), word2, word3);
     }
 
     /**

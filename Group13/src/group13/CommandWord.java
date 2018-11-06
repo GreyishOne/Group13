@@ -13,6 +13,7 @@ public enum CommandWord {
     COLLECT("collect"),
     GIVE("give"),
     INVENTORY("inventory"),
+    PICKUP("pickup"),
     UNKNOWN("?");
     
     // Declare variable
