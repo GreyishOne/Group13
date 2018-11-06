@@ -19,11 +19,20 @@ public class Character {
     public Character(String name, String description, String wants){
         this.name = name;        
         this.description = description;
+        this.wants = wants;
         this.mood = 0;
     }
     
     public String getName(){
         return this.name;
+    }
+    
+    public String setMood(int mood){
+        this.mood = mood;
+    }
+    
+    public String getNeeds(){
+        return this.wants;
     }
     
     public String getDescription(){

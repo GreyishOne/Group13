@@ -67,7 +67,7 @@ public class Game {
         banana.setItem(new Item("Banana"));
         banana.setItem(new Item("COmputer"));
         
-        monky.setCharacter(new Character("Abe", "En vred abe der ikke har fået banan i langtid", "Banan"));
+        monky.setCharacter(new Character("Abe", "En vred abe der ikke har fået banan i langtid", "Banana"));
         
         // Set which room is current
         currentRoom = start;
@@ -238,13 +238,15 @@ public class Game {
             return;
         }
         
-        Character getCharacter = currentRoom.getCharacter("Abe");
-        
+        Character getCharacter = currentRoom.getCharacter(command.getSecondWord());
+        System.out.print(command.getThirdWord());
         if(getCharacter == null){
             System.out.print("This person is not here?");
         }else{
-            if(getCharacter.wants){
+            if(getCharacter.getNeeds().equals(command.getThirdWord())){
                 System.out.print(getCharacter.getDescription());
+            }else{
+                System.out.print("Nej tak siger aben.");
             }
         }
         
